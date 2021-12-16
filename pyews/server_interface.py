@@ -1,9 +1,9 @@
 import json
 import requests
 import pprint
-from py-ews.server_abstractions import Configuration, Perception, Relation, Component
-from py-ews.utilities import http_get, http_post
-from py-ews.global_vars import settings
+from pyews.server_abstractions import Configuration, Perception, Relation, Component
+from pyews.utilities import http_get, http_post
+from pyews.global_vars import settings
 #aligns with REsys.dn
 
 class ewsRESTInterface:
@@ -45,7 +45,7 @@ class ewsRESTInterface:
     @staticmethod
     def get_all_configs():
         """Returns all possible configuration of emergent_web_server as list of Configuration objects."""
-        if(ewsRESTInterface.config_objs is None):
+        if(ewsRESTInterface.config_objs is None): #Does this check for a change in the total number of configs?
             configuration_list = []
             response = http_get("meta/get_all_configs")
             configs = eval(response.text)["configs"]
@@ -120,7 +120,7 @@ class ewsRESTInterface:
     def str_to_func(function_string):
         """Matches strings to functions."""
 
-        funcs = {
+        func = {
             "set_main": ewsRESTInterface.set_main,
             "set_config": ewsRESTInterface.set_config,
             "get_config": ewsRESTInterface.get_config,
@@ -133,9 +133,8 @@ class ewsRESTInterface:
             "remove_comp": ewsRESTInterface.remove_comp,
             "ip_list": ewsRESTInterface.ip_list,
             "terminate": ewsRESTInterface.terminate
-        }
-         
-        func = funcs.get(function_string)
+        }.get(function_string)
+
         return func()
 
     @staticmethod

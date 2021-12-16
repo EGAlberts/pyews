@@ -4,8 +4,8 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="py-ews",
-    version="1.0.0",
+    name="pyews",
+    version="1.0.1",
     author="Elvin Alberts",
     author_email="elvingalberts@gmail.com",
     description="Interface to the dana EWS",

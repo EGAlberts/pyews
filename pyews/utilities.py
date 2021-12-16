@@ -1,6 +1,6 @@
 import requests
-import py-ews.global_vars
-from py-ews.global_vars import settings
+import pyews.global_vars
+from pyews.global_vars import settings
 
 def http_get(dir):
     "Uses 'requests' to HTTP GET request the given directory of the defined global IP."

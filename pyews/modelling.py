@@ -1,6 +1,6 @@
-from py-ews.server_interface import ewsRESTInterface as eRI
-from py-ews.utilities import print_relation_list, http_post, print_comp_list, print_tree
-from py-ews.server_abstractions import Configuration, Relation, Component
+from pyews.server_interface import ewsRESTInterface as eRI
+from pyews.utilities import print_relation_list, http_post, print_comp_list, print_tree
+from pyews.server_abstractions import Configuration, Relation, Component
 
 import enum
 class ConfigurationModel:
