@@ -9,8 +9,16 @@ CONFIG = 0
 REWARD = 1
 N_K = 2
 
-settings["IP"] = "http://localhost:2011/" 
-#eRI.initialize_server({"comp":"../repository/TCPNetwork.o"},{"exp":"|../metacom/monitoring/proxies/HTTPProxy.o|(:http.handler.GET.HTTPGET[0]:*)|"})
+
+definitions = {
+    "URL" : "http://localhost:2011/",    
+    "main_component" : "../repository/TCPNetwork.o",
+    "proxy_JSON" : {"exp":"|../metacom/monitoring/proxies/HTTPProxy.o|*(*:http.handler.GET.HTTPGET[0]:*)|"}
+} 
+
+settings["IP"] = definitions["URL"]
+
+eRI.initialize_server(definitions["main_component"],definitions["proxy_JSON"])
 
 configurations = eRI.get_all_configs()
 
@@ -60,8 +68,11 @@ while(True):
         if(CHOSEN_METRIC in perception.metric_dict):
             reading = perception.metric_dict[CHOSEN_METRIC]
         
-        sample_list.extend([truncate_normalize(individual_value,reading.is_preference_high) \
-            for individual_value in reading.value_list])
+        if(reading):
+            sample_list.extend([truncate_normalize(individual_value,reading.is_preference_high) \
+                for individual_value in reading.value_list])
+        else:
+            print("There is no traffic being experienced by the EWS")
     
     sample_list = np.random.choice(sample_list, size = DESIRED_SAMPLES) #limit to 10 in case of over-sampling
 
