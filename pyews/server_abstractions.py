@@ -1,4 +1,5 @@
 from collections import deque, namedtuple
+from datetime import datetime
 import json
 import copy
 class Configuration:
@@ -357,7 +358,6 @@ class Perception:
 
         if "metrics" in original_JSON:
             metric_json_list = original_JSON["metrics"]
-            
             for metric_json in metric_json_list:
                 self.metric_dict[metric_json["name"]] = self.Metric(metric_json)
     def events_equal(self, other_perception):
@@ -372,10 +372,17 @@ class Perception:
         """Represent an event of the emergent_web_server."""
         def __init__(self, event_JSON):
             #could possibly be simplified/generalized using named tuple and json_loads object hook
-            self.type = str(event_JSON["name"]) #This is actually an HTTP MIME type
-            self.source = event_JSON["source"].split("/")[-1] #last element is name of component e.g. HTTPGET.o
-            self.value = float(event_JSON["value"])
-            #JSON contains name, source, value, count, startTime, endTime
+            self.type = str(event_JSON["type"]) #This is actually an HTTP MIME type
+            self.value = float(event_JSON["quantifier"])
+            self.count = float(event_JSON["counter"])
+
+            start_datetime = event_JSON['started']
+            end_datetime = event_JSON['finished']
+
+            self.start = datetime(year=start_datetime['year'], month=start_datetime['month'], day=start_datetime['day'],hour=start_datetime['hour'],minute=start_datetime['minute'], second=start_datetime['second'],microsecond=start_datetime['millisecond']*1000)
+            self.finish = datetime(year=end_datetime['year'], month=end_datetime['month'], day=end_datetime['day'],hour=end_datetime['hour'],minute=end_datetime['minute'], second=end_datetime['second'],microsecond=end_datetime['millisecond']*1000)
+
+            
 
         def __eq__(self, other):
             return ((self.type == other.type) and (self.source == other.source))
@@ -387,9 +394,15 @@ class Perception:
             self.name = actual_metric["name"]
             if(self.name != "no_metric"):
                 self.value = float(actual_metric["value"])
-                self.count = float(actual_metric["count"])
-                self.is_preference_high = str(actual_metric["preferHigh"]) == 'true'
-                self.value_list = [int(value) for value in actual_metric["valueList"].split(" ")]
+                self.count = float(actual_metric["counter"])
+                self.is_preference_high = actual_metric["high"]
+
+                start_datetime = actual_metric['started']
+                end_datetime = actual_metric['finished']
+
+                self.start = datetime(year=start_datetime['year'], month=start_datetime['month'], day=start_datetime['day'],hour=start_datetime['hour'],minute=start_datetime['minute'], second=start_datetime['second'],microsecond=start_datetime['millisecond']*1000)
+                self.finish = datetime(year=end_datetime['year'], month=end_datetime['month'], day=end_datetime['day'],hour=end_datetime['hour'],minute=end_datetime['minute'], second=end_datetime['second'],microsecond=end_datetime['millisecond']*1000)
+                #self.value_list = [int(value) for value in actual_metric["valueList"].split(" ")]
             
         def average_value(self):
             return self.value/self.count

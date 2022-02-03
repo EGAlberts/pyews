@@ -61,7 +61,6 @@ class ewsRESTInterface:
     def get_perception():
         """Returns Perception object from get_perception of the emergent_web_server."""
         response = http_get("meta/get_perception")
-        
         perception_json = None
         
         try:
@@ -74,7 +73,7 @@ class ewsRESTInterface:
             print(jsonerror.msg)
             return None
 
-        return Perception(perception_json)
+        return Perception(perception_json[0])
 
     @staticmethod
     def get_proxies():

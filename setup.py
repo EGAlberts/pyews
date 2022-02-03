@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="pyews",
-    version="1.0.1",
+    version="1.0.3",
     author="Elvin Alberts",
     author_email="elvingalberts@gmail.com",
     description="Interface to the dana EWS",

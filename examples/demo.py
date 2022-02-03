@@ -13,12 +13,12 @@ N_K = 2
 definitions = {
     "URL" : "http://localhost:2011/",    
     "main_component" : "../repository/TCPNetwork.o",
-    "proxy_JSON" : {"exp":"|../metacom/monitoring/proxies/HTTPProxy.o|*(*:http.handler.GET.HTTPGET[0]:*)|"}
+    "proxy_JSON" : {"exp":"|../pal/monitoring/proxies/HTTPProxy.o|*(*:http.handler.GET.HTTPGET[0]:*)|"}
 } 
 
 settings["IP"] = definitions["URL"]
 
-eRI.initialize_server(definitions["main_component"],definitions["proxy_JSON"])
+#eRI.initialize_server(definitions["main_component"],definitions["proxy_JSON"])
 
 configurations = eRI.get_all_configs()
 
@@ -34,7 +34,9 @@ def truncate_normalize(cost, preferHigh):
     elif(cost < lower_bound):
         cost = lower_bound
 
-    result = float(cost/upper_bound) #normalize
+
+    cost_range = upper_bound - lower_bound
+    result = float((cost - lower_bound)/cost_range) #normalize
     
     if(not preferHigh):
         result = 1.0 - result
@@ -56,7 +58,6 @@ def e_greedy(arms, knowledge):
 while(True):
     new_configuration_i = e_greedy(configurations, knowledge)
     eRI.change_configuration(configurations[new_configuration_i])
-
     time.sleep(COLLECTION_WINDOW)
 
     sample_list = []
@@ -69,10 +70,9 @@ while(True):
             reading = perception.metric_dict[CHOSEN_METRIC]
         
         if(reading):
-            sample_list.extend([truncate_normalize(individual_value,reading.is_preference_high) \
-                for individual_value in reading.value_list])
+            sample_list.extend([truncate_normalize(reading.value,reading.is_preference_high)])
         else:
-            print("There is no traffic being experienced by the EWS")
+            print("There is no traffic being experienced by the EWS and not enough samples have been collected yet")
     
     sample_list = np.random.choice(sample_list, size = DESIRED_SAMPLES) #limit to 10 in case of over-sampling
 

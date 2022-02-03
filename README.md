@@ -1,5 +1,7 @@
 # py-ews
 Interacts with the REST interface of the Emergent Web Server (projectdana.com) to allow interaction with python code.
+The EWS can be installed via Docker, instructions can be found at https://github.com/robertovrf/emergent_web_server
+
 # Installation
 Built version can be found in the dist/ directory. You can install this using pip install dist/&lt;filename>
 
@@ -12,12 +14,6 @@ Python Interface to the emergent_web_server
 3. Use the initialize_server function found in the server_interface.py prior at the beginning of any scripts using this package. Unless the EWS is already initialized.
 
 # Example script
-from pyews.server_interface import ewsRESTInterface as eRI
-from pyews.global_vars import settings
+A demo Python script demonstrating functionality and implementing an epsilon-greedy algorithm is included in examples/
 
-settings["IP"] = "http://localhost:2011/"
-eRI.initialize_server("../repository/TCPNetwork.o",{"exp":"|../metacom/monitoring/proxies/HTTPProxy.o|*(*:http.handler.GET.HTTPGET[0]:*)|"})
 
-eRI.get_all_configs()
-
-Other self-contained examples can be found in examples/ directory.
